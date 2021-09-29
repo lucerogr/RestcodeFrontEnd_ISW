@@ -1,0 +1,24 @@
+{
+  "consultants": [
+    {
+      "id": 23,
+      "userName": "SergioManrique",
+      "firstName": "Sergio",
+      "lastName": "Manrique",
+      "cellphone": "997698234",
+      "email": "sergio.mrq@gmail.com",
+      "password": "passdesergio",
+      "linkedinLink": "https://www.linkedin.com/"
+    },
+    {
+      "id": 22,
+      "userName": "aeiou123",
+      "firstName": "Aeiou",
+      "lastName": "Lol",
+      "cellphone": "9456988",
+      "email": "aeiou.vocal.com",
+      "password": "P4sw0rd",
+      "linkedinLink": "aeiou.com"
+    }
+  ]
+}
