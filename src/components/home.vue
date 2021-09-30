@@ -18,11 +18,13 @@
                   <div class="display-2">
                     RESTCODE
                     <v-spacer></v-spacer>
-                    <p align="center" justify="center">
-                      <v-btn color="#faa519" @click="navigateToLogin">
-                        Iniciar sesión
-                      </v-btn>
-                    </p>
+                    <div v-if="!loggedIn">
+                      <p align="center" justify="center">
+                        <v-btn color="#faa519" @click="navigateToLogin">
+                          Iniciar sesión
+                        </v-btn>
+                      </p>
+                    </div>
                   </div>
 
                 </v-row>
@@ -173,6 +175,15 @@ export default {
     navigateToLogin() {
       this.$router.push({name: 'sign-in'});
     }
+  },
+  computed: {
+    currentUser(){
+      console.log(this.$store.state.auth.user);
+      return this.$store.state.auth.user;
+    },
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
   }
 }
 </script>

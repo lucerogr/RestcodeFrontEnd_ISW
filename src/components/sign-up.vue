@@ -46,9 +46,7 @@
             error-count="2"
             required>
         </v-text-field>
-        <v-radio-group
-            v-model="row"
-            row>
+        <v-radio-group>
           <v-radio
               label="Soy Dueño de restaurante"
               value="radio-1"
@@ -86,7 +84,7 @@
         <v-row>
           <v-col cols="4"></v-col>
           <v-col cols="4">
-            <v-text class="link" @click="navigateToSignIn">¿Ya tienes una cuenta? ¡Inicia sesión!</v-text>
+            <p class="link" @click="navigateToSignIn">¿Ya tienes una cuenta? ¡Inicia sesión!</p>
           </v-col>
           <v-col cols="4"></v-col>
         </v-row>

@@ -3,20 +3,17 @@
     <v-card-title>
       Iniciar Sesión
     </v-card-title>
-    <v-card-list></v-card-list>
     <v-card-text>
       <v-form v-model="isValid">
         <v-text-field
             label="E-mail"
-            v-model="email"
-            :rules="[v => !!v || 'Se requiere su E-mail']"
+            v-model="user.email"
             required>
         </v-text-field>
         <v-text-field
             label="Password"
-            v-model="password"
+            v-model="user.password"
             type="password"
-            :rules="[v => !!v || 'Se requiere su contraseña']"
             required>
         </v-text-field>
       </v-form>
@@ -25,7 +22,7 @@
       <v-btn
           color="primary"
           :disabled="!isValid"
-          @click="login"
+          @click="handleLogin"
       >Login</v-btn>
     </v-card-actions>
     <v-row>
@@ -33,7 +30,7 @@
         <v-row>
           <v-col cols="4"></v-col>
           <v-col cols="4">
-            <v-text class="link" @click="navigateToSignUp">¿Aún no tienes una cuenta? ¡Regístrate! {{ test }}</v-text>
+            <p class="link" @click="navigateToSignUp">¿Aún no tienes una cuenta? ¡Regístrate!</p>
           </v-col>
           <v-col cols="4"></v-col>
         </v-row>
@@ -43,68 +40,63 @@
 </template>
 
 <script>
-import OwnersService from "@/services/owners-service";
-import ConsultantsService from "@/services/consultants-service";
+
+import User from "../models/user";
 export default {
   name: "sign-in",
   data() {
     return {
-      email: null,
-      password: null,
-      isValid: true,
-      found: false,
-      owners: [],
-      test: '',
-      consultants: []
+      user: new User('', '', '', '','',''),
+      loading: false,
+      message: '',
+      isValid: true
+    };
+  },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
+    currentUser(){
+      return this.$store.state.auth.user;
+    }
+  },
+  created() {
+    if(this.loggedIn){
+      this.$router.push({name: 'home'});
     }
   },
   methods: {
     navigateToSignUp() {
       this.$router.push ({name: 'sign-up'});
     },
-    retrieveOwners() {
-      OwnersService.getAllOwners()
-          .then(response => {
-            this.owners = response.data;
-            if (this.owners.some(item => item.email === this.email && item.password === this.password)) {
-              this.navigateToHomeOwner();
-            }
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-    },
-    getDisplayOwner(owner) {
-      return {
-        email: owner.email,
-        password: owner.password
-      };
-    },
-    retrieveConsultants() {
-      ConsultantsService.getAllConsultants()
-          .then(response => {
-            this.consultants = response.data;
-            if (this.consultants.some(item => item.email === this.email && item.password === this.password)) {
-              this.found = true;
-              this.navigateToHomeConsultant();
-            }
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-    },
-    login() {
-      this.retrieveConsultants();
-      if (!this.found) {
-        this.retrieveOwners();
+    handleLogin() {
+      this.loading = true;
+      console.log('Starting Login handling');
+      if (!this.isValid) {
+        console.log('Invalid');
+        this.loading = false;
+        return;
       }
-    },
-    navigateToHomeOwner() {
-      this.$router.push ({name: 'home-owner'});
-    },
-    navigateToHomeConsultant() {
-      this.$router.push ({name: 'home-consultant'});
-    },
+      if (this.user.email !== '' && this.user.password !== '') {
+        this.$store.dispatch('auth/login', this.user).then(
+            () => {
+              console.log('Logged In');
+              if(this.$store.state.auth.user.discriminator === 'consultant'){
+                this.$router.push('consultants/'+ this.currentUser.id);
+              }else{
+                this.$router.push({name: 'lessors', params: {id: '2' }});
+              }
+            },
+            error => {
+              console.log('Error');
+              this.loading = false;
+              this.message = (error.response && error.response.data)
+                  || error.message || error.toString();
+              console.log(this.message)
+            }
+        )
+      }
+    }
   }
 }
 </script>

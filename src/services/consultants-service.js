@@ -1,11 +1,13 @@
 import http from './http-common';
 
+import authHeader from "./auth-header";
+
 class ConsultantsService {
     getAllConsultants() {
-        return http.get('/consultants');
+        return http.get('/consultants', {headers: authHeader()});
     }
     getConsultantById(id) {
-        return http.get(`/consultants/${id}`);
+        return http.get(`/consultants/${id}`, {headers: authHeader()});
     }
 
     createConsultant(data) {
@@ -13,11 +15,11 @@ class ConsultantsService {
     }
 
     updateConsultant(id, data) {
-        return http.put(`/consultants/${id}`, data);
+        return http.put(`/consultants/${id}`, data, {headers: authHeader()});
     }
 
     deleteConsultant(id) {
-        return http.delete(`/consultants/${id}`);
+        return http.delete(`/consultants/${id}`, {headers: authHeader()});
     }
 
 }

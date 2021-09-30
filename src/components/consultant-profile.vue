@@ -151,6 +151,7 @@ export default {
     retrieveConsultant(id) {
       ConsultantService.getConsultantById(id)
           .then((response) => {
+            console.log(response.data)
             this.item = response.data;
           })
           .catch(e => {
