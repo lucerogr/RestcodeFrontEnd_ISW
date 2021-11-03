@@ -81,8 +81,8 @@ export default {
     retrieveFilters() {
       ConsultantsService.getAllConsultants()
           .then(response => {
-            this.filters = response.data;
-            this.displayFilters = response.data.map(this.getDisplayFilter);
+            this.filters = response.data.content;
+            this.displayFilters = response.data.content.map(this.getDisplayFilter);
           })
     },
     refreshList(){

@@ -17,7 +17,7 @@
       Número telefónico: {{defaultItem.cellPhoneNumber}}
     </v-card-text>
     <v-col class="justify-center">
-      <v-btn color="#1bd698" dark class="mb-2" v-bind="attrs" v-on="on" @click="navigateToEditRestaurant(defaultItem.id)">
+      <v-btn color="#1bd698" dark class="mb-2" @click="navigateToEditRestaurant(defaultItem.id)">
         <v-icon>
           mdi-pencil
         </v-icon>
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import RestaurantService from '../services/restaurants-service';
+import RestaurantService from '../../services/restaurants-service';
 export default {
   name: "restaurants",
   data() {
@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     retrieveRestaurant(id) {
-      RestaurantService.get(id)
+      RestaurantService.getByOwnerId(id)
           .then(response => {
             this.defaultItem = response.data;
             this.defaultItem.photo = [
@@ -130,7 +130,7 @@ export default {
     }
   },
   created() {
-    this.retrieveRestaurant(this.$route.params.id);
+    this.retrieveRestaurant(this.$route.query.owner);
   }
 }
 </script>

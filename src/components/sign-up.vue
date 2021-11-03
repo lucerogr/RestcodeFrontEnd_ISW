@@ -71,7 +71,7 @@
             v-model="item.linkedinLink"
             :rules="linkedinLinkRules"
             error-count="2"
-            v-if="!isOwner"
+            v-if="isConsultant"
             required>
         </v-text-field>
       </v-form>
@@ -97,12 +97,14 @@
 <script>
 import OwnersService from "@/services/owners-service";
 import ConsultantsService from "@/services/consultants-service";
+import User from "../models/user";
 export default {
   name: "sign-up",
   data() {
     return {
       isValid: true,
-      isOwner: true,
+      isOwner: false,
+      isConsultant: false,
       item: {
         userName: '',
         firstName: '',
@@ -152,15 +154,33 @@ export default {
   methods: {
     selectOwner() {
       this.isOwner = true;
+      this.isConsultant = false;
     },
     selectConsultant() {
       this.isOwner = false;
+      this.isConsultant = true;
+    },
+    login(email, password){
+      let user = new User('', '', email, '',password,'');
+      this.$store.dispatch('auth/login', user).then(
+          () => {
+          },
+          error => {
+            console.log('Error');
+            this.loading = false;
+            this.message = (error.response && error.response.data)
+                || error.message || error.toString();
+            console.log(this.message)
+          }
+      )
     },
     register() {
       if (this.isOwner) {
         OwnersService.createOwner(this.item)
-            .then(() => {
-              this.navigateToSignIn();
+            .then((response) => {
+              this.login(response.data.email, response.data.password)
+              this.addRestaurant(response.data.id)
+              // this.navigateToSignIn();
             })
             .catch(e => {
               console.log(e);
@@ -169,12 +189,19 @@ export default {
       else {
         ConsultantsService.createConsultant(this.item)
             .then(() => {
-              this.navigateToSignIn();
+              this.login()
+              this.navigateToHome();
             })
             .catch(e => {
               console.log(e);
             })
       }
+    },
+    addRestaurant(id){
+      this.$router.push({ name: 'create-restaurant', params: { id: id} })
+    },
+    navigateToHome() {
+      this.$router.push ({name: 'home'});
     },
     navigateToSignIn() {
       this.$router.push ({name: 'sign-in'});

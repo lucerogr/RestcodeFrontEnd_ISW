@@ -9,6 +9,7 @@
                     class="elevation-1" ref="appointmentsTable">
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+
         </template>
         <template v-slot:top>
           <v-dialog  max-width="500px">
@@ -114,8 +115,8 @@ export default {
     retrieveAppointments() {
       AppointmentService.getAll()
           .then(response => {
-            this.appointments = response.data;
-            this.displayAppointments = response.data.map(this.getDisplayAppointment);
+            this.appointments = response.data.content;
+            this.displayAppointments = response.data.content.map(this.getDisplayAppointment);
           })
           .catch((e) => {
             console.log(e);

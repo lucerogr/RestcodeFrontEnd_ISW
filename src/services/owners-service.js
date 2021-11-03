@@ -1,23 +1,32 @@
-import http from './http-common';
+import authHeader from "./auth-header";
+import axios from "axios";
+
+let http;
+http = axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: {
+        'Content-type': 'application/json'
+    }
+});
 
 class OwnersService {
     getAllOwners() {
-        return http.get('/owners');
+        return http.get('api/owners', {headers: authHeader()});
     }
     getOwnerById(id) {
-        return http.get(`/owners/${id}`);
+        return http.get(`api/owners/${id}`, {headers: authHeader()});
     }
 
     createOwner(data) {
-        return http.post("/owners", data);
+        return http.post("users/owners", data);
     }
 
     updateOwner(id, data) {
-        return http.put(`/owners/${id}`, data);
+        return http.put(`api/owners/${id}`, data, {headers: authHeader()});
     }
 
     deleteOwner(id) {
-        return http.delete(`/owners/${id}`);
+        return http.delete(`api/owners/${id}`, {headers: authHeader()});
     }
 
 }

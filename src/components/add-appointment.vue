@@ -32,13 +32,13 @@
             required>
         </v-text-field>
         <v-text-field
-            v-model.number="item.ownerId"
+            v-model.number="ownerId"
             label="ID Dueño de Restaurante"
             :rules="[v => !!v || 'Id de Dueño de Restaurante es requerido']"
             required>
         </v-text-field>
         <v-text-field
-            v-model.number="item.consultantId"
+            v-model.number="consultantId"
             label="ID Consultor"
             :rules="[v => !!v || 'Id de Consultor es requerido']"
             required>
@@ -60,13 +60,13 @@ export default {
   name: "add-appointment",
   data() {
     return {
+      ownerId: 0,
+      consultantId: 0,
       item: {
         currentDateTime: '',
         scheduleDateTime: '',
         topic: '',
         meetLink: '',
-        ownerId: 0,
-        consultantId: 0
       }
     }
   },
@@ -76,11 +76,11 @@ export default {
       this.item.scheduleDateTime = null
       this.item.topic = ''
       this.item.meetLink =''
-      this.item.ownerId = 0
-      this.item.consultantId = 0
+      this.ownerId = 0
+      this.consultantId = 0
     },
     save() {
-      AppointmentService.add(this.item)
+      AppointmentService.add(this.ownerId,this.consultantId,this.item)
           .then(() => {
             this.navigateToAppointments();
           })

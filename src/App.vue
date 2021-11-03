@@ -8,7 +8,8 @@
       <div v-if="loggedIn">
         <v-toolbar-items>
           <v-btn text to="/home">Inicio</v-btn>
-          <v-btn text to="/restaurants/301">Restaurante</v-btn>
+          <v-btn text to="/appointments" v-if="owner">Appointments</v-btn>
+          <v-btn text @click="restaurant" v-if="owner">Restaurante</v-btn>
           <v-btn text to="/consultancies">Consultores</v-btn>
           <v-btn text @click="profile">Perfil</v-btn>
           <v-btn text @click="logout">Log out</v-btn>
@@ -43,6 +44,9 @@ export default {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
     },
+    owner(){
+      return this.$store.state.auth.user.discriminator === "owner";
+    },
     currentUser() {
       return this.$store.state.auth.user;
     }
@@ -52,8 +56,16 @@ export default {
       this.$store.dispatch('auth/logout');
       this.$router.push({name: 'sign-in'});
     },
+    restaurant(){
+      this.$router.push({name: 'restaurant', query: { owner: this.currentUser.id}})
+    },
     profile(){
-      this.$router.push('/consultants/'+ this.currentUser.id);
+      if(this.currentUser.discriminator === "consultant"){
+        this.$router.push('/consultants/'+ this.currentUser.id);
+      }else{
+        this.$router.push('/owners/'+ this.currentUser.id);
+      }
+
     }
   }
 };

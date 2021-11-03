@@ -84,7 +84,10 @@ export default {
               if(this.$store.state.auth.user.discriminator === 'consultant'){
                 this.$router.push('consultants/'+ this.currentUser.id);
               }else{
-                this.$router.push({name: 'lessors', params: {id: '2' }});
+                if(this.$store.state.auth.user.discriminator === 'owner'){
+                  this.$router.push('owners/'+ this.currentUser.id);
+                }
+
               }
             },
             error => {

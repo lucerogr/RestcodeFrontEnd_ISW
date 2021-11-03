@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const API_URL = 'https://localhost:44316/api/users/authentication';
+const API_URL = 'http://localhost:8080/users/authentication';
 
 class AuthService{
     login(user){
@@ -12,7 +12,6 @@ class AuthService{
         })
             .then(response =>{
                 if(response.data.token){
-                    console.log("user: "+ response.data);
                     localStorage.setItem('user', JSON.stringify(response));
                 }
                 return response.data;
