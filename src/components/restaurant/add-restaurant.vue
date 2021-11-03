@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Regístrate</v-card-title>
+    <v-card-title>Agrega tu Restaurante</v-card-title>
     <v-card-text>
       <v-form v-model="isValid">
         <v-text-field

@@ -54,7 +54,7 @@ export default {
     save() {
       RestaurantService.update(this.item.id, this.item)
           .then(() => {
-            this.navigateToRestaurants();
+            this.navigateToRestaurants(this.item.ownerId);
           })
           .catch(e => {
             console.log(e);
@@ -63,8 +63,8 @@ export default {
     close() {
       this.navigateToRestaurants();
     },
-    navigateToRestaurants() {
-      this.$router.push({name: 'restaurants'});
+    navigateToRestaurants(id) {
+      this.$router.push({name: 'restaurant', query: { owner: id}})
     }
   },
   created() {
