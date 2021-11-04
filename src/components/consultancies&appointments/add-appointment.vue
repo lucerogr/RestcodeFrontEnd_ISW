@@ -31,18 +31,6 @@
             :rules="[v => !!v || 'Link de la reunión es requerido']"
             required>
         </v-text-field>
-        <v-text-field
-            v-model.number="ownerId"
-            label="ID Dueño de Restaurante"
-            :rules="[v => !!v || 'Id de Dueño de Restaurante es requerido']"
-            required>
-        </v-text-field>
-        <v-text-field
-            v-model.number="consultantId"
-            label="ID Consultor"
-            :rules="[v => !!v || 'Id de Consultor es requerido']"
-            required>
-        </v-text-field>
       </v-container>
     </v-card-text>
     <v-card-actions>
@@ -55,7 +43,8 @@
 </template>
 
 <script>
-import AppointmentService from "@/services/appointments-service";
+import AppointmentService from "../../services/appointments-service";
+
 export default {
   name: "add-appointment",
   data() {
@@ -94,6 +83,10 @@ export default {
     navigateToAppointments() {
       this.$router.push ({name: 'appointments'});
     }
+  },
+  created() {
+    this.consultantId = this.$route.query.consultantId;
+    this.ownerId = this.$route.query.ownerId;
   }
 }
 </script>

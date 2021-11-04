@@ -7,10 +7,10 @@
 
       <div v-if="loggedIn">
         <v-toolbar-items>
-          <v-btn text to="/home">Inicio</v-btn>
-          <v-btn text to="/appointments" v-if="owner">Appointments</v-btn>
+          <v-btn text to="/">Inicio</v-btn>
           <v-btn text @click="restaurant" v-if="owner">Restaurante</v-btn>
-          <v-btn text to="/consultancies">Consultores</v-btn>
+          <v-btn text to="/consultancies" v-if="owner">Consultorías</v-btn>
+          <v-btn text to="/appointments" v-if="!owner">Appointments</v-btn>
           <v-btn text @click="profile">Perfil</v-btn>
           <v-btn text @click="logout">Log out</v-btn>
         </v-toolbar-items>

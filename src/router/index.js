@@ -46,6 +46,40 @@ const routes = [
         name: 'edit-restaurant',
         component: () => import('../components/restaurant/edit-restaurant')
     },
+
+    // Appointments and consultancies&appointments
+    {
+        path: '/consultancies',
+        name: 'consultancies',
+        component: () => import('../components/consultancies&appointments/consultancies')
+    },
+    {
+        path: '/consultants',
+        name: 'consultants',
+        component: () => import('../components/consultancies&appointments/consultants')
+    },
+    {
+        path: '/appointments',
+        name: 'appointments',
+        component: () => import('../components/consultancies&appointments/appointments')
+    },
+    {
+        path: '/appointments/new',
+        name: 'add-appointment',
+        component: () => import('../components/consultancies&appointments/add-appointment')
+    },
+    {
+        path: '/consultancy/new',
+        name: 'add-consultancy',
+        component: () => import('../components/consultancies&appointments/add-consultancy')
+    },
+    {
+        path: '/consultancy',
+        name: 'view-consultancy',
+        component: () => import('../components/consultancies&appointments/view-consultancy')
+    },
+
+
     {
         path: '/home-owner',
         name: 'home-owner',
@@ -61,22 +95,7 @@ const routes = [
         name: 'home-consultant',
         component: () => import('../components/home-consultant')
     },
-    {
-        path: '/appointments',
-        name: 'appointments',
-        component: () => import('../components/appointments')
-    },
-    {
-        path: '/appointments/new',
-        name: 'add-appointment',
-        component: () => import('../components/add-appointment')
-    },
 
-    {
-        path: '/consultancies',
-        name: 'filters',
-        component: () => import('../components/filters')
-    },
     {
         path: '/sales',
         name: 'sales',

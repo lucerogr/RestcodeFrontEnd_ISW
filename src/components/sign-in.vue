@@ -8,15 +8,20 @@
         <v-text-field
             label="E-mail"
             v-model="user.email"
+            :rules="emailRules"
+            error-count="2"
             required>
         </v-text-field>
         <v-text-field
             label="Password"
             v-model="user.password"
             type="password"
+            :rules="passwordRules"
+            error-count="2"
             required>
         </v-text-field>
       </v-form>
+      <span v-if="!this.loading">{{this.message}}</span>
     </v-card-text>
     <v-card-actions>
       <v-btn
@@ -49,7 +54,14 @@ export default {
       user: new User('', '', '', '','',''),
       loading: false,
       message: '',
-      isValid: true
+      isValid: true,
+      emailRules: [
+        v => !!v || 'Se requiere su e-mail',
+        v => /.+@.+/.test(v) || 'Su e-mail debe ser válido'
+      ],
+      passwordRules: [
+        v => !!v || 'Se requiere su contraseña',
+      ],
     };
   },
   computed: {
@@ -93,8 +105,7 @@ export default {
             error => {
               console.log('Error');
               this.loading = false;
-              this.message = (error.response && error.response.data)
-                  || error.message || error.toString();
+              this.message = error.response.data.message;
               console.log(this.message)
             }
         )

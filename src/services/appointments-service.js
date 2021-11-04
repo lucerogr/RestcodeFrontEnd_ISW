@@ -2,8 +2,11 @@ import http from './http-common';
 import authHeader from "./auth-header";
 
 class AppointmentsService {
-    getAll() {
-        return http.get('/appointments', {headers: authHeader()});
+    getAllByOwner(id) {
+        return http.get(`/appointments?owner=${id}`, {headers: authHeader()});
+    }
+    getAllByConsultant(id){
+        return http.get(`/appointments?consultant=${id}`, {headers: authHeader()});
     }
     get(id) {
         return http.get(`/appointments/${id}`, {headers: authHeader()});

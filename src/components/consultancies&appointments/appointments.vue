@@ -7,9 +7,14 @@
     <v-card-text>
       <v-data-table :headers="headers" :items="displayAppointments" :items-per-page="5"
                     class="elevation-1" ref="appointmentsTable">
-        <template v-slot:[`item.actions`]="{ item }">
+        <template v-slot:[`item.delete`]="{ item }">
           <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
-
+        </template>
+        <template v-slot:[`item.add-consultancy`]="{ item }">
+          <v-icon small @click="goToAddConsultancy(item.id)">mdi-book-edit</v-icon>
+        </template>
+        <template v-slot:[`item.view-consultancy`]="{ item }">
+          <v-icon small @click="goToViewConsultancy(item.id)">mdi-book-play</v-icon>
         </template>
         <template v-slot:top>
           <v-dialog  max-width="500px">
@@ -57,17 +62,28 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <v-dialog v-model="errorDialog" max-width="500px">
+            <v-card>
+              <v-card-title class="headline">Todavía no ha recibido un review</v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeError">OK</v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </template>
       </v-data-table>
     </v-card-text>
     <v-card-actions>
       <v-btn small color="primary" @click="navigateToAddAppointment">Pedir una cita</v-btn>
+      <v-btn small color="primary" @click="navigateToConsultancies">Volver a consultorías</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import AppointmentService from '../services/appointments-service';
+import AppointmentService from '../../services/appointments-service';
 export default {
   name: "appointments",
   data() {
@@ -79,9 +95,8 @@ export default {
         {text: 'Fecha y hora para la cita', value: 'scheduleDateTime'},
         {text: 'Tema', value: 'topic'},
         {text: 'Link de la reunión', value: 'meetLink'},
-        {text: 'ID Dueño de Restaurante', value: 'ownerId'},
-        {text: 'ID Consultor', value: 'consultantId'},
-        {text: 'Acciones', value: 'actions', sortable: false}
+        this.discriminator === 'owner' ? {text: 'ID Consultor', value: 'consultantId'}:{text: 'ID Dueño', value: 'ownerId'},
+        {text: 'Eliminar', value: 'delete', sortable: false}
       ],
       appointments: [],
       displayAppointments: [],
@@ -104,6 +119,8 @@ export default {
         ownerId: 0,
         consultantId: 0
       },
+
+      errorDialog: false
     }
   },
   watch: {
@@ -112,9 +129,24 @@ export default {
     },
   },
   methods: {
-    retrieveAppointments() {
-      AppointmentService.getAll()
+    closeError(){
+      this.errorDialog = false;
+    },
+    retrieveAppointmentsByOwner(id) {
+      AppointmentService.getAllByOwner(id)
           .then(response => {
+            console.log(response.data)
+            this.appointments = response.data.content;
+            this.displayAppointments = response.data.content.map(this.getDisplayAppointment);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+    },
+    retrieveAppointmentsByConsultant(id) {
+      AppointmentService.getAllByConsultant(id)
+          .then(response => {
+            console.log(response.data)
             this.appointments = response.data.content;
             this.displayAppointments = response.data.content.map(this.getDisplayAppointment);
           })
@@ -134,7 +166,11 @@ export default {
       };
     },
     refreshList() {
-      this.retrieveAppointments();
+      if(this.currentUser.discriminator === 'owner'){
+        this.retrieveAppointmentsByOwner(this.currentUser.id);
+      }else{
+        this.retrieveAppointmentsByConsultant(this.currentUser.id);
+      }
     },
     removeAllAppointments() {
       AppointmentService.deleteAll()
@@ -173,11 +209,43 @@ export default {
           });
     },
     navigateToAddAppointment() {
-      this.$router.push({name: 'add-appointment'});
+      this.$router.push({name: 'consultants'});
+    },
+    navigateToConsultancies() {
+      this.$router.push({name: 'consultancies'});
+    },
+    goToAddConsultancy(id){
+      this.$router.push({name: 'add-consultancy', query:{ appointmentId: id}});
+    },
+    goToViewConsultancy(id){
+      this.$router.push({name: 'view-consultancy', query:{ appointmentId: id}});
     }
   },
-  mounted() {
-    this.retrieveAppointments();
+  computed: {
+    discriminator(){
+      return this.$store.state.auth.user.discriminator;
+    },
+    currentUser(){
+      return this.$store.state.auth.user;
+    }
+  },
+  created() {
+    if(this.$route.query.error){
+      this.errorDialog= true;
+    }
+    if(this.discriminator === 'owner'){
+      this.headers.push(
+          {text: 'Ver review', value: 'view-consultancy', sortable: false}
+      )
+      this.retrieveAppointmentsByOwner(this.currentUser.id);
+    }else{
+      this.headers.push(
+          {text: 'Añadir / Editar review ', value: 'add-consultancy', sortable: false},
+          {text: 'Ver review', value: 'view-consultancy', sortable: false}
+      )
+      this.retrieveAppointmentsByConsultant(this.currentUser.id);
+    }
+
   }
 }
 </script>
