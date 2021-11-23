@@ -5,7 +5,7 @@
       <v-spacer></v-spacer>
     </v-card-title>
     <v-card-text>
-      <v-data-table :headers="headers" :items="displayAppointments" :items-per-page="5"
+      <v-data-table :headers="headers" :items="displayAppointments" :items-per-page="10"
                     class="elevation-1" ref="appointmentsTable">
         <template v-slot:[`item.delete`]="{ item }">
           <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
@@ -62,16 +62,18 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="errorDialog" max-width="500px">
-            <v-card>
-              <v-card-title class="headline">Todavía no ha recibido un review</v-card-title>
+
+          <v-dialog v-model="correctDialog" max-width="500px">
+            <v-card id="correctDialog">
+              <v-card-title class="headline">Se agendó correctamente la consultoría</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeError">OK</v-btn>
+                <v-btn id="correctDialogClose" color="blue darken-1" text @click="closeCorrectDialog">OK</v-btn>
                 <v-spacer></v-spacer>
               </v-card-actions>
             </v-card>
           </v-dialog>
+
         </template>
       </v-data-table>
     </v-card-text>
@@ -88,6 +90,7 @@ export default {
   name: "appointments",
   data() {
     return {
+      correctDialog: false,
       dialogDelete: false,
       headers: [
         {text: 'Id', value: 'id'},
@@ -95,7 +98,8 @@ export default {
         {text: 'Fecha y hora para la cita', value: 'scheduleDateTime'},
         {text: 'Tema', value: 'topic'},
         {text: 'Link de la reunión', value: 'meetLink'},
-        this.discriminator === 'owner' ? {text: 'ID Consultor', value: 'consultantId'}:{text: 'ID Dueño', value: 'ownerId'},
+        {text: 'ID Consultor', value: 'consultantId'},
+        {text: 'ID Dueño', value: 'ownerId'},
         {text: 'Eliminar', value: 'delete', sortable: false}
       ],
       appointments: [],
@@ -131,6 +135,9 @@ export default {
   methods: {
     closeError(){
       this.errorDialog = false;
+    },
+    closeCorrectDialog() {
+      this.correctDialog = false;
     },
     retrieveAppointmentsByOwner(id) {
       AppointmentService.getAllByOwner(id)
@@ -232,6 +239,9 @@ export default {
   created() {
     if(this.$route.query.error){
       this.errorDialog= true;
+    }
+    if(this.$route.query.correct){
+      this.correctDialog=true;
     }
     if(this.discriminator === 'owner'){
       this.headers.push(

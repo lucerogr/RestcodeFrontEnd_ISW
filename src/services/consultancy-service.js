@@ -6,10 +6,10 @@ class ConsultancyService {
         return http.get('/consultancies', {headers: authHeader()});
     }
     getConsultancyByAppointmentId(id){
-        return http.get(`appointments/${id}/consultancies`, {headers: authHeader()});
+        return http.get(`/appointments/${id}/consultancies`, {headers: authHeader()});
     }
     createConsultancy(id,data) {
-        return http.post(`appointments/${id}/consultancies`, data, {headers: authHeader()});
+        return http.post(`/appointments/${id}/consultancies`, data, {headers: authHeader()});
     }
     updateConsultancy(id, data) {
         return http.put(`/consultancies/${id}`, data, {headers: authHeader()});

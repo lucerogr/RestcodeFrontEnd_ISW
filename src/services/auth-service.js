@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/users/authentication';
+const API_URL = 'http://localhost:9090/restcode-backend/users/authentication';
 
 class AuthService{
     login(user){

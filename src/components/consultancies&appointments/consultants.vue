@@ -12,12 +12,21 @@
           :search="search"
           class="elevation-1"
           ref="filterTable">
-        <template v-slot:[`item.profile`]="{ item }">
-          <v-icon @click="navigateToConsultantProfile(item.id)">mdi-account</v-icon>
-        </template>
-
-        <template v-slot:[`item.appointment`]="{ item }">
-          <v-icon @click="navigateToNewAppointment(item.id)" style="color: blue">mdi-book-open</v-icon>
+        <template v-slot:item="{ item }">
+          <tr>
+            <td class="text-xs-right pa-4"> {{ item.id }}</td>
+            <td class="text-xs-right pa-0"> {{ item.firstName }}</td>
+            <td class="text-xs-right pa-0"> {{ item.lastName }}</td>
+            <td class="text-xs-right pa-0"> {{ item.cellphone }}</td>
+            <td class="text-xs-right pa-0"> {{ item.linkedinLink }}</td>
+            <td>
+              <v-icon @click="navigateToConsultantProfile(item.id)">mdi-account</v-icon>
+            </td>
+            <td>
+              <v-icon :id="item.bid" @click="navigateToNewAppointment(item.id)" style="color: blue">mdi-book-open
+              </v-icon>
+            </td>
+          </tr>
         </template>
       </v-data-table>
     </v-card-text>
@@ -26,14 +35,15 @@
 
 <script>
 import ConsultantsService from '../../services/consultants-service';
+
 export default {
   name: "filters",
   data() {
     return {
-      search:'',
+      search: '',
       dialog: false,
       dialogDelete: false,
-      headers:[
+      headers: [
         {text: 'Id', value: 'id'},
         {text: 'Nombre', value: 'firstName'},
         {text: 'Apellido', value: 'lastName'},
@@ -43,16 +53,16 @@ export default {
         {text: 'Pedir una Consultoría', value: 'appointment', sortable: false}
       ],
       filters: [],
-      displayFilters:[],
-      editedIndex:-1,
-      editedItem:{
-        id:0,
+      displayFilters: [],
+      editedIndex: -1,
+      editedItem: {
+        id: 0,
         firstName: '',
-        lastName:'',
+        lastName: '',
         cellphone: '',
         linkedinLink: ''
       },
-      defaultItem:{
+      defaultItem: {
         id: 0,
         firstName: '',
         lastName: '',
@@ -65,7 +75,7 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? 'New Tutorial' : 'Edit Tutorial';
     },
-    currentUser(){
+    currentUser() {
       return this.$store.state.auth.user;
     }
   },
@@ -76,7 +86,8 @@ export default {
         firstName: filter.firstName,
         lastName: filter.lastName,
         cellphone: filter.cellphone,
-        linkedinLink: filter.linkedinLink
+        linkedinLink: filter.linkedinLink,
+        bid: "consultancy-" + filter.id
       };
     },
     retrieveFilters() {
@@ -86,13 +97,13 @@ export default {
             this.displayFilters = response.data.content.map(this.getDisplayFilter);
           })
     },
-    refreshList(){
+    refreshList() {
       this.retrieveFilters();
     },
     navigateToConsultantProfile(id) {
-      this.$router.push ({path: `consultants/${id}`});
+      this.$router.push({path: `consultants/${id}`});
     },
-    navigateToNewAppointment(id){
+    navigateToNewAppointment(id) {
       this.$router.push({name: 'add-appointment', query: {consultantId: id, ownerId: this.currentUser.id}});
     }
   },

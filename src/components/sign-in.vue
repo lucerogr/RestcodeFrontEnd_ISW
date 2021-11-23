@@ -6,6 +6,7 @@
     <v-card-text>
       <v-form v-model="isValid">
         <v-text-field
+            id="login-email"
             label="E-mail"
             v-model="user.email"
             :rules="emailRules"
@@ -13,6 +14,7 @@
             required>
         </v-text-field>
         <v-text-field
+            id="login-password"
             label="Password"
             v-model="user.password"
             type="password"
@@ -25,6 +27,7 @@
     </v-card-text>
     <v-card-actions>
       <v-btn
+          id="button-login"
           color="primary"
           :disabled="!isValid"
           @click="handleLogin"

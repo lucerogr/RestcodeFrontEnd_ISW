@@ -2,17 +2,19 @@
   <v-app>
     <v-app-bar app dark fixed color="#1BD698">
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      <v-toolbar-title>RestCode</v-toolbar-title>
+      <v-toolbar-title>
+        <v-btn text to="/">RestCode</v-btn>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
 
       <div v-if="loggedIn">
         <v-toolbar-items>
           <v-btn text to="/">Inicio</v-btn>
-          <v-btn text @click="restaurant" v-if="owner">Restaurante</v-btn>
-          <v-btn text to="/consultancies" v-if="owner">Consultorías</v-btn>
-          <v-btn text to="/appointments" v-if="!owner">Appointments</v-btn>
-          <v-btn text @click="profile">Perfil</v-btn>
-          <v-btn text @click="logout">Log out</v-btn>
+          <v-btn id="restaurant-page" text @click="restaurant" v-if="owner">Restaurante</v-btn>
+          <v-btn id="consultancypg" text to="/consultancies" v-if="owner">Consultorías</v-btn>
+          <v-btn id="appointment-page" text to="/appointments" v-if="!owner">Appointments</v-btn>
+          <v-btn id="profile-page" text @click="profile">Perfil</v-btn>
+          <v-btn id="logout" text @click="logout">Log out</v-btn>
         </v-toolbar-items>
       </div>
       <div v-else>

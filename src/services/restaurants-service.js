@@ -10,11 +10,11 @@ class RestaurantsService {
     }
 
     getByOwnerId(id){
-        return http.get(`owners/${id}/restaurants`, {headers: authHeader()});
+        return http.get(`/owners/${id}/restaurants`, {headers: authHeader()});
     }
 
     create(data, id) {
-        return http.post(`owners/${id}/restaurants`, data, {headers: authHeader()});
+        return http.post(`/owners/${id}/restaurants`, data, {headers: authHeader()});
     }
 
     update(id, data) {
